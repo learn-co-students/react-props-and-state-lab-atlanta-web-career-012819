@@ -25,7 +25,7 @@ class App extends React.Component {
     });
   };
 
-  handleFindPetsClick = e => {
+  handleFindPetsClick = () => {
     // console.log('hi')
     let path = "/api/pets";
 
@@ -34,8 +34,26 @@ class App extends React.Component {
 
     fetch(path)
       .then(response => response.json())
-      .then(console.log);
+      .then(data => {
+        this.setState({
+          pets: data
+        });
+      });
   };
+
+  handleAdoptPet = id => {
+    console.log(id)
+    const pet = this.state.pets.find(pet => pet.id === id)
+    pet.isAdopted = true
+    console.log(pet)
+
+    this.setState({
+      pets: [
+        ...this.state.pets,
+        ...pet
+      ]
+    })
+  }
 
   render() {
     return (
@@ -52,7 +70,10 @@ class App extends React.Component {
               />
             </div>
             <div className="twelve wide column">
-              <PetBrowser />
+              <PetBrowser
+                pets={this.state.pets}
+                onAdoptPet={this.handleAdoptPet}
+              />
             </div>
           </div>
         </div>
