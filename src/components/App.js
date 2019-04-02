@@ -1,19 +1,41 @@
-import React from 'react'
+import React from "react";
 
-import Filters from './Filters'
-import PetBrowser from './PetBrowser'
+import Filters from "./Filters";
+import PetBrowser from "./PetBrowser";
 
 class App extends React.Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
       pets: [],
       filters: {
-        type: 'all'
+        type: "all"
       }
-    }
+    };
   }
+
+  changeType = e => {
+    // console.log(e.target.value)
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        type: e.target.value
+      }
+    });
+  };
+
+  handleFindPetsClick = e => {
+    // console.log('hi')
+    let path = "/api/pets";
+
+    if (this.state.filters.type !== "all")
+      path += `?type=${this.state.filters.type}`;
+
+    fetch(path)
+      .then(response => response.json())
+      .then(console.log);
+  };
 
   render() {
     return (
@@ -24,7 +46,10 @@ class App extends React.Component {
         <div className="ui container">
           <div className="ui grid">
             <div className="four wide column">
-              <Filters />
+              <Filters
+                onChangeType={this.changeType}
+                onFindPetsClick={this.handleFindPetsClick}
+              />
             </div>
             <div className="twelve wide column">
               <PetBrowser />
@@ -32,8 +57,8 @@ class App extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;
